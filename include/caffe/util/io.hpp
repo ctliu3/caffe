@@ -100,6 +100,10 @@ bool ReadImageToDatum(const string& filename, const int label,
     const int height, const int width, const bool is_color,
     const std::string & encoding, Datum* datum);
 
+bool ReadImageToDatum(const string& filename, const std::vector<int> labels,
+    const int height, const int width, const bool is_color,
+    const std::string & encoding, Datum* datum);
+
 inline bool ReadImageToDatum(const string& filename, const int label,
     const int height, const int width, const bool is_color, Datum* datum) {
   return ReadImageToDatum(filename, label, height, width, is_color,
@@ -128,6 +132,9 @@ inline bool ReadImageToDatum(const string& filename, const int label,
 
 bool DecodeDatumNative(Datum* datum);
 bool DecodeDatum(Datum* datum, bool is_color);
+
+void ReadImagesList(const string& source,
+    std::vector<std::pair<std::string, std::vector<int> > >* images_vec);
 
 #ifdef USE_OPENCV
 cv::Mat ReadImageToCVMat(const string& filename,

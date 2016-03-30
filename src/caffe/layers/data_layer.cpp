@@ -75,9 +75,11 @@ void DataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
 
   Dtype* top_data = batch->data_.mutable_cpu_data();
   Dtype* top_label = NULL;  // suppress warnings about uninitialized variables
+  int num_labels = 0;
 
   if (this->output_labels_) {
     top_label = batch->label_.mutable_cpu_data();
+    num_labels = batch->label_.channels();
   }
   for (int item_id = 0; item_id < batch_size; ++item_id) {
     timer.Start();
@@ -91,7 +93,9 @@ void DataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     this->data_transformer_->Transform(datum, &(this->transformed_data_));
     // Copy label.
     if (this->output_labels_) {
-      top_label[item_id] = datum.label();
+      for (int l = 0; l < num_labels; ++l) {
+        top_label[item_id * num_labels + l] = datum.label(l);
+      }
     }
     trans_time += timer.MicroSeconds();
 
